@@ -11,7 +11,6 @@ ENV UV_COMPILE_BYTECODE=1 \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-
 FROM python:3.14-slim AS runtime
 
 ENV PATH="/app/.venv/bin:${PATH}" \
@@ -25,7 +24,9 @@ RUN groupadd --system appuser \
 
 COPY --from=builder /app/.venv /app/.venv
 COPY app ./app
-COPY artifacts/model.pkl ./artifacts/model.pkl
+
+COPY train.py ./train.py
+RUN .venv/bin/python train.py
 
 RUN chown -R appuser:appuser /app
 
