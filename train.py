@@ -23,6 +23,8 @@ from sklearn.model_selection import train_test_split
 ARTIFACTS_DIR = Path("artifacts")
 MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
 EXPERIMENT_NAME = "iris-rf"
+REGISTERED_MODEL_NAME = "iris-classifier"
+MLFLOW_TRACKING_URI = "sqlite:///mlflow.db"
 N_ESTIMATORS = 100
 MAX_DEPTH = 3
 RANDOM_STATE = 42
@@ -35,7 +37,8 @@ def main() -> None:
         X, y, test_size=0.2, stratify=y, random_state=RANDOM_STATE
     )
 
-    # 2. Point MLflow at an experiment (created if missing)
+    # 2. Use the local MLflow store and point MLflow at an experiment
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(EXPERIMENT_NAME)
 
     # 3. One run = one tracked training attempt
@@ -57,7 +60,11 @@ def main() -> None:
         mlflow.log_param("max_depth", MAX_DEPTH)
         mlflow.log_metric("accuracy", acc)
         mlflow.log_metric("f1_macro", f1)
-        mlflow.sklearn.log_model(model, name="model")
+        model_info = mlflow.sklearn.log_model(model, name="model")
+        registered_model = mlflow.register_model(
+            model_uri=model_info.model_uri,
+            name=REGISTERED_MODEL_NAME,
+        )
 
         # 6. Also save a plain pickle for the API to load at serve time
         ARTIFACTS_DIR.mkdir(exist_ok=True)
@@ -65,6 +72,10 @@ def main() -> None:
 
         print(f"accuracy={acc:.3f}  f1_macro={f1:.3f}")
         print(f"mlflow_run_id={run.info.run_id}")
+        print(
+            f"registered_model={REGISTERED_MODEL_NAME} "
+            f"version={registered_model.version}"
+        )
         print(f"saved model -> {MODEL_PATH}")
 
 
