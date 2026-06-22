@@ -1,0 +1,20 @@
+[project]
+name = "ml-model-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.138.0",
+    "joblib>=1.5.3",
+    "mlflow>=3.14.0",
+    "pydantic>=2.13.4",
+    "scikit-learn>=1.9.0",
+    "uvicorn[standard]>=0.49.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.15.18",
+]
