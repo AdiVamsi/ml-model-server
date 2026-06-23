@@ -1,0 +1,10 @@
+services:
+  localstack:
+    image: localstack/localstack:3.8
+    ports:
+      - "4566:4566"            # the single edge port for all AWS services
+    environment:
+      - SERVICES=ecr,lambda,iam,sts,logs
+      - DEBUG=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"   # Lambda needs this to run containers
