@@ -13,3 +13,4 @@ mlruns/
 mlflow.db
 lambda.zip
 lambda_build/*
+response.json
