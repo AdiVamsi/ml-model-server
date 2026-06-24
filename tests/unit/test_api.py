@@ -7,7 +7,8 @@ def test_health():
     with TestClient(app) as client:
         response = client.get("/health")
 
-    # TODO: Fill in assertions.
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 
 def test_predict_valid_payload():
@@ -21,7 +22,10 @@ def test_predict_valid_payload():
     with TestClient(app) as client:
         response = client.post("/predict", json=payload)
 
-    # TODO: Fill in assertions.
+    assert response.status_code == 200
+    body = response.json()
+    assert body["predicted_class"] == "setosa"
+    assert set(body["probabilities"]) == {"setosa", "versicolor", "virginica"}
 
 
 def test_predict_malformed_payload():
@@ -34,4 +38,4 @@ def test_predict_malformed_payload():
     with TestClient(app) as client:
         response = client.post("/predict", json=payload)
 
-    # TODO: Fill in assertions. Expected status code: 422.
+    assert response.status_code == 422

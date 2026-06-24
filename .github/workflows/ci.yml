@@ -17,6 +17,8 @@ jobs:
         run: uv sync --all-extras --dev
       - name: Lint
         run: uv run ruff check .
+      - name: Train model artifact
+        run: uv run python train.py
       - name: Test
         run: uv run pytest -q
       - name: Dependency scan (stub)
