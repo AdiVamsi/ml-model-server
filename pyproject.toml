@@ -22,3 +22,12 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+testpaths = ["tests"]
+norecursedirs = [
+    "lambda_build",
+    ".venv",
+    "artifacts",
+    "mlruns",
+    "build",
+    "dist",
+]
